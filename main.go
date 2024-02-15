@@ -2,22 +2,23 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"os"
 )
 
 func main() {
-	args := os.Args
-	if len(args) == 1 {
+	bFlag := flag.Bool("b", false, "Number non-blank output lines")
+	flag.Parse()
+	args := flag.Args()
+
+	if len(args) == 0 {
 		fmt.Println("No file to read")
 		return
 	}
-	fileNames := make([]string, 0)
 
-	for i, arg := range args {
-		if i == 0 {
-			continue
-		}
+	fileNames := make([]string, 0)
+	for _, arg := range args {
 		fileNames = append(fileNames, arg)
 
 	}
@@ -31,8 +32,14 @@ func main() {
 		defer file.Close()
 
 		scanner := bufio.NewScanner(file)
+    lineNum := 1
 		for scanner.Scan() {
-			fmt.Println(scanner.Text())
+      if (*bFlag) {
+        fmt.Println("    ", lineNum, "", scanner.Text())
+        lineNum++
+      } else {
+        fmt.Println(scanner.Text())
+      }
 		}
 
 		if err := scanner.Err(); err != nil {

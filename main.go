@@ -8,21 +8,35 @@ import (
 
 func main() {
 	args := os.Args
-	fileName := args[1]
-
-	file, err := os.Open(fileName)
-	if err != nil {
-		fmt.Println("Error:", err)
+	if len(args) == 1 {
+		fmt.Println("No file to read")
 		return
 	}
-	defer file.Close()
+	fileNames := make([]string, 0)
 
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		fmt.Println(scanner.Text())
+	for i, arg := range args {
+		if i == 0 {
+			continue
+		}
+		fileNames = append(fileNames, arg)
+
 	}
 
-	if err := scanner.Err(); err != nil {
-		fmt.Println("Error:", err)
+	for _, fileName := range fileNames {
+		file, err := os.Open(fileName)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			fmt.Println(scanner.Text())
+		}
+
+		if err := scanner.Err(); err != nil {
+			fmt.Println("Error:", err)
+		}
 	}
 }

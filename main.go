@@ -1,19 +1,28 @@
 package main
 
 import (
-  "fmt"
-  "os"
+	"bufio"
+	"fmt"
+	"os"
 )
 
 func main() {
-  args := os.Args
-  fileName := args[1]
+	args := os.Args
+	fileName := args[1]
 
-  file, err := os.Open(fileName)
-  if err != nil {
-    fmt.Println("Error:", err)
-    return
-  }
-  defer file.Close()
+	file, err := os.Open(fileName)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	defer file.Close()
 
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		fmt.Println(scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		fmt.Println("Error:", err)
+	}
 }

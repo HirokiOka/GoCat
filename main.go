@@ -11,6 +11,7 @@ func main() {
 	bFlag := flag.Bool("b", false, "Number non-blank output lines")
 	nFlag := flag.Bool("n", false, "Number all output lines")
   sFlag := flag.Bool("s", false, "Squeeze multiple adjacent empty lines")
+  eFlag := flag.Bool("e", false, "Display $ at the end of each line")
 	flag.Parse()
 	args := flag.Args()
 
@@ -59,6 +60,8 @@ func main() {
         } else {
           fmt.Println(scanner.Text())
         }
+      } else if *eFlag {
+        fmt.Println(scanner.Text() + "$")
 			} else {
 				fmt.Println(scanner.Text())
 			}

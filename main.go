@@ -10,6 +10,7 @@ import (
 func main() {
 	bFlag := flag.Bool("b", false, "Number non-blank output lines")
 	nFlag := flag.Bool("n", false, "Number all output lines")
+  sFlag := flag.Bool("s", false, "Squeeze multiple adjacent empty lines")
 	flag.Parse()
 	args := flag.Args()
 
@@ -46,6 +47,18 @@ func main() {
 			} else if *nFlag {
 				fmt.Println(indentString, lineNum, "", scanner.Text())
 				lineNum++
+      } else if *sFlag {
+				if scanner.Text() == "" {
+          fmt.Println(scanner.Text())
+          for scanner.Scan() {
+            if scanner.Text() != "" {
+              fmt.Println(scanner.Text())
+              break
+            }
+          }
+        } else {
+          fmt.Println(scanner.Text())
+        }
 			} else {
 				fmt.Println(scanner.Text())
 			}

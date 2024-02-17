@@ -9,6 +9,7 @@ import (
 
 func main() {
 	bFlag := flag.Bool("b", false, "Number non-blank output lines")
+	nFlag := flag.Bool("n", false, "Number all output lines")
 	flag.Parse()
 	args := flag.Args()
 
@@ -32,14 +33,22 @@ func main() {
 		defer file.Close()
 
 		scanner := bufio.NewScanner(file)
-    lineNum := 1
+		lineNum := 1
+		indentString := "    "
 		for scanner.Scan() {
-      if (*bFlag) {
-        fmt.Println("    ", lineNum, "", scanner.Text())
-        lineNum++
-      } else {
-        fmt.Println(scanner.Text())
-      }
+			if *bFlag {
+				if scanner.Text() == "\n" || scanner.Text() == "" {
+					fmt.Println(scanner.Text())
+				} else {
+					fmt.Println(indentString, lineNum, "", scanner.Text())
+					lineNum++
+				}
+			} else if *nFlag {
+				fmt.Println(indentString, lineNum, "", scanner.Text())
+				lineNum++
+			} else {
+				fmt.Println(scanner.Text())
+			}
 		}
 
 		if err := scanner.Err(); err != nil {
